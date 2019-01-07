@@ -32,7 +32,8 @@ SOURCES += \
     figure.cpp
 
 HEADERS += \
-    figure.hpp
+    figure.hpp \
+    field.hpp
 
 FORMS += \
         mainwindow.ui

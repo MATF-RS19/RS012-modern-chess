@@ -21,7 +21,7 @@ enum figure_color {
 class Figure : public QGraphicsItem {
 public:
     Figure(figure_type type,
-           uint8_t i, uint8_t j,
+           int8_t i, int8_t j,
            figure_color color,
            QRectF rect)
         : type_(type)
@@ -52,7 +52,7 @@ protected:
 
 private:
     figure_type type_;
-    uint8_t pos_i_, pos_j_;
+    int8_t pos_i_, pos_j_;
     figure_color color_;
     QRectF rect_;
 };

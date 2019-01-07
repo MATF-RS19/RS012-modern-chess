@@ -1,5 +1,8 @@
 #include "figure.hpp"
+#include "field.hpp"
 #include <QPainter>
+#include <QGraphicsScene>
+#include <QDebug>
 
 QRectF Figure::boundingRect() const {
     return rect_;
@@ -45,8 +48,95 @@ void Figure::paint(QPainter *painter,
     return;
 }
 
-void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+extern Field board[8][8];
+std::vector<Field> calculate_possible_fields(int8_t i, int8_t j,
+                                             figure_type type, QColor color) {
+    std::vector<Field> result{};
+    switch (type) {
+        case Pawn: {
+            if(color == Black) {
+                if(i > 1) {
+                    if(!board[i-1][j].is_taken()) {
+                        result.push_back(board[i-1][j]);
+                    } if(j >= 1 && board[i-1][j-1].is_taken() && board[i-1][j-1].is_enemy()) {
+                        result.push_back(board[i-1][j-1]);
+                    } if(j <= 6 && board[i-1][j+1].is_taken() && board[i-1][j+1].is_enemy()) {
+                        result.push_back(board[i-1][j+1]);
+                    }
+                }
+            } else if(color == White) {
+                if(i <= 6) {
+                    if(!board[i+1][j].is_taken()) {
+                        result.push_back(board[i+1][j]);
+                    } if(j >= 1 && board[i+1][j-1].is_taken() && board[i+1][j-1].is_enemy()) {
+                        result.push_back(board[i+1][j-1]);
+                    } if(j <= 6 && board[i+1][j+1].is_taken() && board[i+1][j+1].is_enemy()) {
+                        result.push_back(board[i+1][j+1]);
+                    }
+                }
+            }
+            break;
+        }
+        case Rook: {
+            for(int8_t tmp_i = i+1; tmp_i < 8; tmp_i++) {
+                if(board[tmp_i][j].is_taken()) {
+                    if(board[tmp_i][j].is_enemy()) {
+                        result.push_back(board[tmp_i][j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][j]);
+            }
+            for(int8_t tmp_i = i-1; tmp_i >= static_cast<int8_t>(0); tmp_i--) {
+                if(board[tmp_i][j].is_taken()) {
+//                    qDebug() << "aaaaaaaaaaaaaa";
+                    if(board[tmp_i][j].is_enemy()) {
+                        result.push_back(board[tmp_i][j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][j]);
+            }
+            for(int8_t tmp_j = j+1; tmp_j < 8; tmp_j++) {
+                if(board[i][tmp_j].is_taken()) {
+                    if(board[i][tmp_j].is_enemy()) {
+                        result.push_back(board[i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[i][tmp_j]);
+            }
+            for(int8_t tmp_j = j-1; tmp_j >= static_cast<int8_t>(0); tmp_j--) {
+                if(board[i][tmp_j].is_taken()) {
+                    if(board[i][tmp_j].is_enemy()) {
+                        result.push_back(board[i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[i][tmp_j]);
+            }
+            break;
+        }
+        case Knight:
+        case Bishop:
+        case Queen:
+        case King:
+            break;
+    }
+    return result;
+}
 
+//extern QGraphicsScene* scene;
+
+void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+    for(int8_t i = 0; i < 8; i++) {
+        for(int8_t j = 0; j < 8; j++) {
+            board[i][j].reset_color();
+        }
+    }
+    auto possible_fields = calculate_possible_fields(pos_i_, pos_j_, type_, color_);
+    for(auto &&field : possible_fields) {
+        field.set_color(Qt::darkRed);
+//        scene->addItem(field.rect_item());
+    }
+
+    return;
 }
 
 void Figure::advance(int step) {
