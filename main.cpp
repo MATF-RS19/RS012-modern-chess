@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
                 board[i][j].set_taken(true);
                 scene->addItem(white_fig.back());
             } else if(i == 1) { // Pawn
-                if(j==7) continue;
+                if(j==7 || j == 4 || j == 3) continue;
                 white_fig.push_back(new Figure(Pawn, i, j, White, rect));
                 board[i][j].set_taken(true);
                 scene->addItem(white_fig.back());

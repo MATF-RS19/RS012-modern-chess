@@ -113,11 +113,168 @@ std::vector<Field> calculate_possible_fields(int8_t i, int8_t j,
             }
             break;
         }
-        case Knight:
-        case Bishop:
-        case Queen:
-        case King:
+        case Bishop: {
+            for(int8_t tmp_i = i+1, tmp_j = j+1; tmp_i < 8 && tmp_j < 8; tmp_i++, tmp_j++) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i+1, tmp_j = j-1; tmp_i < 8 && tmp_j >= 0; tmp_i++, tmp_j--) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i-1, tmp_j = j+1; tmp_i >= 0 && tmp_j < 8; tmp_i--, tmp_j++) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i-1, tmp_j = j-1; tmp_i >= 0 && tmp_j >= 0; tmp_i--, tmp_j--) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
             break;
+        }
+        case Knight: {
+            if(i+1<8 && j+2<8) {
+                if(!board[i+1][j+2].is_taken() || board[i+1][j+2].is_enemy()) {
+                    result.push_back(board[i+1][j+2]);
+                }
+            } if(i+1<8 && j-2>=0) {
+                if(!board[i+1][j-2].is_taken() || board[i+1][j-2].is_enemy()) {
+                    result.push_back(board[i+1][j-2]);
+                }
+            } if(i-1>=0 && j+2<8) {
+                if(!board[i-1][j+2].is_taken() || board[i-1][j+2].is_enemy()) {
+                    result.push_back(board[i-1][j+2]);
+                }
+            } if(i-1>=0 && j-2>=0) {
+                if(!board[i-1][j-2].is_taken() || board[i-1][j-2].is_enemy()) {
+                    result.push_back(board[i-1][j-2]);
+                }
+            }
+
+            if(i+2<8 && j+1<8) {
+                if(!board[i+2][j+1].is_taken() || board[i+2][j+1].is_enemy()) {
+                    result.push_back(board[i+2][j+1]);
+                }
+            } if(i+2<8 && j-1>=0) {
+                if(!board[i+2][j-1].is_taken() || board[i+2][j-1].is_enemy()) {
+                    result.push_back(board[i+2][j-1]);
+                }
+            } if(i-2>=0 && j+1<8) {
+                if(!board[i-2][j+1].is_taken() || board[i-2][j+1].is_enemy()) {
+                    result.push_back(board[i-2][j+1]);
+                }
+            } if(i-2>=0 && j-1>=0) {
+                if(!board[i-2][j-1].is_taken() || board[i-2][j-1].is_enemy()) {
+                    result.push_back(board[i-2][j-1]);
+                }
+            }
+            break;
+        }
+        case Queen: {
+            for(int8_t tmp_i = i+1; tmp_i < 8; tmp_i++) {
+                if(board[tmp_i][j].is_taken()) {
+                    if(board[tmp_i][j].is_enemy()) {
+                        result.push_back(board[tmp_i][j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][j]);
+            }
+            for(int8_t tmp_i = i-1; tmp_i >= static_cast<int8_t>(0); tmp_i--) {
+                if(board[tmp_i][j].is_taken()) {
+    //                    qDebug() << "aaaaaaaaaaaaaa";
+                    if(board[tmp_i][j].is_enemy()) {
+                        result.push_back(board[tmp_i][j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][j]);
+            }
+            for(int8_t tmp_j = j+1; tmp_j < 8; tmp_j++) {
+                if(board[i][tmp_j].is_taken()) {
+                    if(board[i][tmp_j].is_enemy()) {
+                        result.push_back(board[i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[i][tmp_j]);
+            }
+            for(int8_t tmp_j = j-1; tmp_j >= static_cast<int8_t>(0); tmp_j--) {
+                if(board[i][tmp_j].is_taken()) {
+                    if(board[i][tmp_j].is_enemy()) {
+                        result.push_back(board[i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[i][tmp_j]);
+            }
+
+            for(int8_t tmp_i = i+1, tmp_j = j+1; tmp_i < 8 && tmp_j < 8; tmp_i++, tmp_j++) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i+1, tmp_j = j-1; tmp_i < 8 && tmp_j >= 0; tmp_i++, tmp_j--) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i-1, tmp_j = j+1; tmp_i >= 0 && tmp_j < 8; tmp_i--, tmp_j++) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            for(int8_t tmp_i = i-1, tmp_j = j-1; tmp_i >= 0 && tmp_j >= 0; tmp_i--, tmp_j--) {
+                if(board[tmp_i][tmp_j].is_taken()) {
+                    if(board[tmp_i][tmp_j].is_enemy()) {
+                        result.push_back(board[tmp_i][tmp_j]);
+                    } break;
+                }
+                result.push_back(board[tmp_i][tmp_j]);
+            }
+            break;
+        }
+        case King: {
+            if(i-1>=0 && (!board[i-1][j].is_taken() || board[i-1][j].is_enemy())) {
+                result.push_back(board[i-1][j]);
+            } if(i-1>=0 && j-1>=0 && (!board[i-1][j-1].is_taken() || board[i-1][j-1].is_enemy())) {
+                result.push_back(board[i-1][j-1]);
+            } if(i-1>=0 && j+1<8 && (!board[i-1][j+1].is_taken() || board[i-1][j+1].is_enemy())) {
+                result.push_back(board[i-1][j+1]);
+            } if(i+1<8 && (!board[i+1][j].is_taken() || board[i+1][j].is_enemy())) {
+                result.push_back(board[i+1][j]);
+            } if(i+1<8 && j-1>=0 && (!board[i+1][j-1].is_taken() || board[i+1][j-1].is_enemy())) {
+                result.push_back(board[i+1][j-1]);
+            } if(i+1<8 && j+1<8 && (!board[i+1][j+1].is_taken() || board[i+1][j+1].is_enemy())) {
+                result.push_back(board[i+1][j+1]);
+            } if(j-1>=0 && (!board[i][j-1].is_taken() || board[i][j-1].is_enemy())) {
+                result.push_back(board[i][j-1]);
+            } if(j+1<8 && (!board[i][j+1].is_taken() || board[i][j+1].is_enemy())) {
+                result.push_back(board[i][j+1]);
+            }
+            break;
+        }
     }
     return result;
 }
