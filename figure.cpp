@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QDebug>
+#include "game.hpp"
 
 QRectF Figure::boundingRect() const {
     return rect_;
@@ -281,7 +282,9 @@ std::vector<Field> calculate_possible_fields(int8_t i, int8_t j,
 
 //extern QGraphicsScene* scene;
 
+extern Game game;
 void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+    game.set_picked_figure(this);
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {
             board[i][j].reset_color();
@@ -297,5 +300,5 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
 }
 
 void Figure::advance(int step) {
-
+    setPos(115+4*50, 115+4*50);
 }

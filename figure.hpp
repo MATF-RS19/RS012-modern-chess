@@ -30,6 +30,14 @@ public:
         , color_(color)
         , rect_(rect) { }
 
+    char get_hor() const {
+        return 'H' - pos_i_;
+    }
+
+    char get_ver() const {
+        return '8' - pos_j_;
+    }
+
     Figure(const Figure &other)
         : type_(other.type_)
         , pos_i_(other.pos_i_)

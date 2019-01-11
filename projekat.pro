@@ -29,11 +29,14 @@ CONFIG += c++17
 
 SOURCES += \
         main.cpp \
-    figure.cpp
+    figure.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     figure.hpp \
-    field.hpp
+    field.hpp \
+    game.hpp \
+    mainwindow.hpp
 
 FORMS += \
         mainwindow.ui
