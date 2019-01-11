@@ -50,7 +50,7 @@ void Figure::paint(QPainter *painter,
 }
 
 extern Field board[8][8];
-std::vector<Field> calculate_possible_fields(int8_t i, int8_t j,
+void Figure::calculate_possible_fields(int8_t i, int8_t j,
                                              figure_type type, QColor color) {
     std::vector<Field> result{};
     switch (type) {
@@ -277,7 +277,8 @@ std::vector<Field> calculate_possible_fields(int8_t i, int8_t j,
             break;
         }
     }
-    return result;
+    possible_fields_.clear();
+    possible_fields_ = result;
 }
 
 //extern QGraphicsScene* scene;
@@ -290,8 +291,8 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
             board[i][j].reset_color();
         }
     }
-    auto possible_fields = calculate_possible_fields(pos_i_, pos_j_, type_, color_);
-    for(auto &&field : possible_fields) {
+    calculate_possible_fields(pos_i_, pos_j_, type_, color_);
+    for(auto &&field : possible_fields_) {
         field.set_color(Qt::darkRed);
 //        scene->addItem(field.rect_item());
     }

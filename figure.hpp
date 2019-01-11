@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QGraphicsItem>
+#include "field.hpp"
 
 enum figure_type {
     Pawn,
@@ -31,11 +32,11 @@ public:
         , rect_(rect) { }
 
     char get_hor() const {
-        return 'H' - pos_i_;
+        return 'A' + pos_i_;
     }
 
     char get_ver() const {
-        return '8' - pos_j_;
+        return '1' + pos_j_;
     }
 
     Figure(const Figure &other)
@@ -59,10 +60,13 @@ protected:
     void advance(int step) override;
 
 private:
+    void calculate_possible_fields(int8_t i, int8_t j,
+                                                 figure_type type, QColor color);
     figure_type type_;
     int8_t pos_i_, pos_j_;
     figure_color color_;
     QRectF rect_;
+    std::vector<Field> possible_fields_;
 };
 
 #endif // FIGURE_HPP

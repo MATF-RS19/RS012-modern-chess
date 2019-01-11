@@ -49,10 +49,10 @@ void MainWindow::on_next_turn_clicked(bool) {
             qDebug() << "Mora da pocinje sa nekim od karaktera 12345678";
         } else {
             qDebug() << ui_->field_code_text->text();
-            int h = game.picked_figure()->get_hor() - text[0];
-            int v = - game.picked_figure()->get_ver() + text[1];
+            int h = text[0] - game.picked_figure()->get_hor();
+            int v = text[1] - game.picked_figure()->get_ver();
             qDebug("%c, %c\n", game.picked_figure()->get_hor(), game.picked_figure()->get_ver());
-            game.picked_figure()->moveBy(h*50, v*50);
+            game.picked_figure()->moveBy(v*50, h*50);
         }
     } else {
         qDebug() << "Nisi uneo nikakav tekst ili nisi izabrao figuru";
@@ -84,20 +84,17 @@ void MainWindow::populateScene() {
         }
     }
     for(char c = 0; c < 8; c++) {
-        QGraphicsTextItem *text = scene_->addText(QString('A'+c));
+        QGraphicsTextItem *text = scene_->addText(QString('1'+c));
         text->setPos(125+50*c, 50);
         text->setScale(3);
     }
 
     for(char c = 0; c < 8; c++) {
-        QGraphicsTextItem *text = scene_->addText(QString('1'+c));
+        QGraphicsTextItem *text = scene_->addText(QString('A'+c));
         text->setPos(75, 110+50*c);
         text->setScale(3);
     }
 
-    QGraphicsTextItem *text2 = scene_->addText("B");
-    text2->setPos(125+50, 50);
-    text2->setScale(3);
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {
             QRectF rect(115+j*50, 100+i*50, 50, 50);
