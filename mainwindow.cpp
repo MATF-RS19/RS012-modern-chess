@@ -12,6 +12,7 @@
 
 Field board[8][8];
 Game game;
+figure_color current_turn = White;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -57,6 +58,7 @@ void MainWindow::on_next_turn_clicked(bool) {
                     board[game.picked_figure()->get_hor()-'A']
                          [game.picked_figure()->get_ver()-'1'].set_taken(false);
                     board[field.i()][field.j()].set_taken(true);
+                    board[field.i()][field.j()].set_fig_col(game.picked_figure()->color());
                     qDebug("%c, %c\n", field.i()+'A', field.j()+'1');
                     legit_move = true;
                 }
@@ -95,6 +97,11 @@ void MainWindow::populateScene() {
             QRectF rect(120+j*50, 120+i*50, 50, 50);
             board[i][j].set_i(i);
             board[i][j].set_j(j);
+            if(i == 0 || i == 1) {
+                board[i][j].set_fig_col(White);
+            } else {
+                board[i][j].set_fig_col(Black);
+            }
             board[i][j].set_rect(rect);
             board[i][j].set_initial_color((i+j) % 2 ? Qt::darkCyan : Qt::gray);
             board[i][j].set_color((i+j) % 2 ? Qt::darkCyan : Qt::gray);
@@ -176,6 +183,7 @@ void MainWindow::populateScene() {
                 }
                 scene_->addItem(black_fig.back());
             } else if(i == 6) { // Pawn
+                if(j == 7) continue;
                 black_fig.push_back(new Figure(Pawn, i, j, Black, rect));
                 board[i][j].set_taken(true);
                 scene_->addItem(black_fig.back());

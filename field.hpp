@@ -1,6 +1,23 @@
 #pragma once
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
+#include <QDebug>
+
+enum figure_type {
+    Pawn,
+    Rook,
+    Knight,
+    Bishop,
+    Queen,
+    King
+};
+
+enum figure_color {
+    Black,
+    White
+};
+
+extern figure_color current_turn;
 
 class Field {
 public:
@@ -12,10 +29,12 @@ public:
 //        , color_(color) { }
 
     Field(int8_t i=0, int8_t j=0,
-          bool taken = false)
+          bool taken = false,
+          figure_color fig_col = White)
         : i_(i)
         , j_(j)
-        , taken_(taken) {
+        , taken_(taken)
+        , fig_col_(fig_col) {
         rect_item_ = new QGraphicsRectItem();
     }
 
@@ -44,7 +63,9 @@ public:
     }
 
     bool is_enemy() const {
-        return false; // TODO
+        if(taken_) {
+            return fig_col_ != current_turn;
+        } return false;
     }
 
     QGraphicsRectItem* rect_item() const {
@@ -69,10 +90,15 @@ public:
         rect_item_->setBrush(color_);
     }
 
+    void set_fig_col(figure_color fig_col) {
+        fig_col_ = fig_col;
+    }
+
 private:
     int8_t i_, j_;
     QGraphicsRectItem* rect_item_;
-    bool taken_;
+    bool taken_; 
     QColor color_;
     QColor old_color_;
+    figure_color fig_col_;
 };

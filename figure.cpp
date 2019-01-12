@@ -97,7 +97,7 @@ void Figure::calculate_possible_fields(int8_t i, int8_t j,
                 result.push_back(board[tmp_i][j]);
             }
             for(int8_t tmp_j = j+1; tmp_j < 8; tmp_j++) {
-                qDebug("---%d %d---\n", i, tmp_j);
+//                qDebug("---%d %d---\n", i, tmp_j);
                 if(board[i][tmp_j].is_taken()) {
                     if(board[i][tmp_j].is_enemy()) {
                         result.push_back(board[i][tmp_j]);
@@ -106,7 +106,7 @@ void Figure::calculate_possible_fields(int8_t i, int8_t j,
                 result.push_back(board[i][tmp_j]);
             }
             for(int8_t tmp_j = j-1; tmp_j >= static_cast<int8_t>(0); tmp_j--) {
-                qDebug("---%d %d---\n", i, tmp_j);
+//                qDebug("---%d %d---\n", i, tmp_j);
                 if(board[i][tmp_j].is_taken()) {
                     if(board[i][tmp_j].is_enemy()) {
                         result.push_back(board[i][tmp_j]);
@@ -291,6 +291,7 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
         qDebug() << "Nije tvoj red";
         return;
     }
+    qDebug() << "ovde puca..........===";
     game.set_picked_figure(this);
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {

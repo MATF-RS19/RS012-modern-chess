@@ -5,20 +5,6 @@
 #include <QGraphicsItem>
 #include "field.hpp"
 
-enum figure_type {
-    Pawn,
-    Rook,
-    Knight,
-    Bishop,
-    Queen,
-    King
-};
-
-enum figure_color {
-    Black,
-    White
-};
-
 class Figure : public QGraphicsItem {
 public:
     Figure(figure_type type,
@@ -53,6 +39,10 @@ public:
 
     void set_pos_j(int8_t j) {
         pos_j_ = j;
+    }
+
+    figure_color color() const {
+        return color_;
     }
 
     Figure(const Figure &other)

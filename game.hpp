@@ -20,6 +20,7 @@ public:
         turn_ = turn_ == White ? Black : White;
         current_phase_ = pick_figure;
         picked_figure_->clear_fields();
+        current_turn = turn_;
     }
 
     void set_current_phase(phase p) {
