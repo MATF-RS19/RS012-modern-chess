@@ -39,6 +39,10 @@ public:
         return '1' + pos_j_;
     }
 
+    std::vector<Field> possible_fields() const {
+        return possible_fields_;
+    }
+
     Figure(const Figure &other)
         : type_(other.type_)
         , pos_i_(other.pos_i_)

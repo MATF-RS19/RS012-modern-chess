@@ -43,16 +43,31 @@ void MainWindow::on_next_turn_clicked(bool) {
         std::string digits("12345678");
         if(text.size() != 2) {
             qDebug() << "Mora da ima tacno 2 karaktera";
-        } else if(!letters.find(text[0])) {
+        } else if(letters.find(text[0]) == std::string::npos) {
             qDebug() << "Mora da pocinje sa nekim od karaktera ABCDEFGH";
-        } else if(!digits.find(text[1])) {
-            qDebug() << "Mora da pocinje sa nekim od karaktera 12345678";
+        } else if(digits.find(text[1]) == std::string::npos) {
+            qDebug() << "Mora da se zavrsava sa nekim od karaktera 12345678";
         } else {
             qDebug() << ui_->field_code_text->text();
             int h = text[0] - game.picked_figure()->get_hor();
             int v = text[1] - game.picked_figure()->get_ver();
+            bool legit_move = false;
             qDebug("%c, %c\n", game.picked_figure()->get_hor(), game.picked_figure()->get_ver());
+            for(auto && field : game.picked_figure()->possible_fields()) {
+                if(text[0]-'A' == field.i() && text[1]-'1' == field.j()) {
+                    board[game.picked_figure()->get_hor()-'A']
+                         [game.picked_figure()->get_ver()-'1'].set_taken(false);
+                    field.set_taken(true);
+                    legit_move = true;
+                }
+            }
+            qDebug("%c, %c\n", game.picked_figure()->get_hor(), game.picked_figure()->get_ver());
+            if(!legit_move) {
+                qDebug() << "Not a legit move";
+                return;
+            }
             game.picked_figure()->moveBy(v*50, h*50);
+            game.end_turn();
         }
     } else {
         qDebug() << "Nisi uneo nikakav tekst ili nisi izabrao figuru";
@@ -77,6 +92,8 @@ void MainWindow::populateScene() {
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {
             QRectF rect(120+j*50, 120+i*50, 50, 50);
+            board[i][j].set_i(i);
+            board[i][j].set_j(j);
             board[i][j].set_rect(rect);
             board[i][j].set_initial_color((i+j) % 2 ? Qt::darkCyan : Qt::gray);
             board[i][j].set_color((i+j) % 2 ? Qt::darkCyan : Qt::gray);

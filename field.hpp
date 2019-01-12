@@ -11,9 +11,28 @@ public:
 //        , taken_(taken)
 //        , color_(color) { }
 
-    Field(bool taken = false)
-        : taken_(taken) {
+    Field(int8_t i=0, int8_t j=0,
+          bool taken = false)
+        : i_(i)
+        , j_(j)
+        , taken_(taken) {
         rect_item_ = new QGraphicsRectItem();
+    }
+
+    void set_i(int8_t i) {
+        i_ = i;
+    }
+
+    void set_j(int8_t j) {
+        j_ = j;
+    }
+
+    int8_t i() const {
+        return i_;
+    }
+
+    int8_t j() const {
+        return j_;
     }
 
     bool is_taken() const {
@@ -51,6 +70,7 @@ public:
     }
 
 private:
+    int8_t i_, j_;
     QGraphicsRectItem* rect_item_;
     bool taken_;
     QColor color_;

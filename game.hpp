@@ -39,6 +39,10 @@ public:
         scene_ = scene;
     }
 
+    figure_color turn() const {
+        return turn_;
+    }
+
     QGraphicsScene* scene() const {
         return scene_;
     }
