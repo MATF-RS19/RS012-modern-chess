@@ -52,21 +52,22 @@ void MainWindow::on_next_turn_clicked(bool) {
             int h = text[0] - game.picked_figure()->get_hor();
             int v = text[1] - game.picked_figure()->get_ver();
             bool legit_move = false;
-            qDebug("%c, %c\n", game.picked_figure()->get_hor(), game.picked_figure()->get_ver());
             for(auto && field : game.picked_figure()->possible_fields()) {
                 if(text[0]-'A' == field.i() && text[1]-'1' == field.j()) {
                     board[game.picked_figure()->get_hor()-'A']
                          [game.picked_figure()->get_ver()-'1'].set_taken(false);
-                    field.set_taken(true);
+                    board[field.i()][field.j()].set_taken(true);
+                    qDebug("%c, %c\n", field.i()+'A', field.j()+'1');
                     legit_move = true;
                 }
             }
-            qDebug("%c, %c\n", game.picked_figure()->get_hor(), game.picked_figure()->get_ver());
             if(!legit_move) {
                 qDebug() << "Not a legit move";
                 return;
             }
             game.picked_figure()->moveBy(v*50, h*50);
+            game.picked_figure()->set_pos_i(text[0]-'A');
+            game.picked_figure()->set_pos_j(text[1]-'1');
             game.end_turn();
         }
     } else {
@@ -120,23 +121,27 @@ void MainWindow::populateScene() {
                     case 0: // rook
                     case 7:
                         white_fig.push_back(new Figure(Rook, i, j, White, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 1: // knight
                     case 6:
-                        white_fig.push_back(new Figure(Knight, i, j, White, rect));
+//                        white_fig.push_back(new Figure(Knight, i, j, White, rect));
+//                        board[i][j].set_taken(true);
                         break;
                     case 2: // bishop
                     case 5:
                         white_fig.push_back(new Figure(Bishop, i, j, White, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 3: // queen
                         white_fig.push_back(new Figure(Queen, i, j, White, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 4: // king
                         white_fig.push_back(new Figure(King, i, j, White, rect));
+                        board[i][j].set_taken(true);
                         break;
                 }
-                board[i][j].set_taken(true);
                 scene_->addItem(white_fig.back());
             } else if(i == 1) { // Pawn
                 if(j==7 || j == 4 || j == 3) continue;
@@ -148,27 +153,31 @@ void MainWindow::populateScene() {
                     case 0: // rook
                     case 7:
                         black_fig.push_back(new Figure(Rook, i, j, Black, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 1: // knight
                     case 6:
                         black_fig.push_back(new Figure(Knight, i, j, Black, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 2: // bishop
                     case 5:
                         black_fig.push_back(new Figure(Bishop, i, j, Black, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 4: // queen
                         black_fig.push_back(new Figure(Queen, i, j, Black, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 3: // king
                         black_fig.push_back(new Figure(King, i, j, Black, rect));
+                        board[i][j].set_taken(true);
                         break;
                 }
-                board[i][j].set_taken(true);
                 scene_->addItem(black_fig.back());
             } else if(i == 6) { // Pawn
-                board[i][j].set_taken(true);
                 black_fig.push_back(new Figure(Pawn, i, j, Black, rect));
+                board[i][j].set_taken(true);
                 scene_->addItem(black_fig.back());
             }
         }

@@ -39,8 +39,20 @@ public:
         return '1' + pos_j_;
     }
 
+    inline void clear_fields() {
+        possible_fields_.clear();
+    }
+
     std::vector<Field> possible_fields() const {
         return possible_fields_;
+    }
+
+    void set_pos_i(int8_t i) {
+        pos_i_ = i;
+    }
+
+    void set_pos_j(int8_t j) {
+        pos_j_ = j;
     }
 
     Figure(const Figure &other)
