@@ -25,10 +25,6 @@ public:
         return '1' + pos_j_;
     }
 
-    inline void clear_fields() {
-        possible_fields_.clear();
-    }
-
     std::vector<Field> possible_fields() const {
         return possible_fields_;
     }
@@ -39,6 +35,14 @@ public:
 
     void set_pos_j(int8_t j) {
         pos_j_ = j;
+    }
+
+    int8_t pos_i() const {
+        return pos_i_;
+    }
+
+    int8_t pos_j() const {
+        return pos_j_;
     }
 
     figure_color color() const {
@@ -62,6 +66,9 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
 
+    void clear_fields() {
+        possible_fields_.clear();
+    }
 protected:
     void advance(int step) override;
 

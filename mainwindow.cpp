@@ -13,6 +13,8 @@
 Field board[8][8];
 Game game;
 figure_color current_turn = White;
+std::vector<Figure*> white_fig;
+std::vector<Figure*> black_fig;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -67,6 +69,36 @@ void MainWindow::on_next_turn_clicked(bool) {
                 qDebug() << "Not a legit move";
                 return;
             }
+            if(game.picked_figure()->color() == Black) {
+                int k = 0;
+                qDebug("white ~~~%d~~~\n", white_fig.size());
+                std::for_each(white_fig.begin(), white_fig.end(),
+                              [&](Figure* fig) -> void {
+                                if(fig->pos_i() == text[0]-'A' && fig->pos_j() == text[1]-'1') {
+                                    scene_->removeItem(fig);
+                                    white_fig.erase(white_fig.begin()+k);
+                                    qDebug() << "Sta";
+                                }
+                                k++;
+                              }
+                );
+            } else if(game.picked_figure()->color() == White) {
+                int k = 0;
+                qDebug("black ~~~%d~~~\n", black_fig.size());
+                std::for_each(black_fig.begin(), black_fig.end(),
+                              [&](Figure* fig) -> void {
+                                qDebug("!!! %c, %c !!!", fig->get_hor(), fig->get_ver());
+                                if(fig->pos_i() == text[0]-'A' && fig->pos_j() == text[1]-'1') {
+                                    scene_->removeItem(fig);
+                                    black_fig.erase(black_fig.begin()+k);
+                                    qDebug() << "Sta ali belo";
+                                }
+                                k++;
+                              }
+                );
+            }
+            game.picked_figure()->set_pos_i(text[0]-'A');
+            game.picked_figure()->set_pos_j(text[1]-'1');
             game.picked_figure()->moveBy(v*50, h*50);
             game.picked_figure()->set_pos_i(text[0]-'A');
             game.picked_figure()->set_pos_j(text[1]-'1');
@@ -90,8 +122,6 @@ void MainWindow::on_pick_field_clicked(bool) {
 void MainWindow::populateScene() {
     scene_ = new QGraphicsScene(0, 0, 800, 800);
 
-    std::vector<Figure*> white_fig;
-    std::vector<Figure*> black_fig;
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {
             QRectF rect(120+j*50, 120+i*50, 50, 50);

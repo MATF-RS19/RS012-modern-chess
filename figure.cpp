@@ -291,7 +291,6 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
         qDebug() << "Nije tvoj red";
         return;
     }
-    qDebug() << "ovde puca..........===";
     game.set_picked_figure(this);
     for(int8_t i = 0; i < 8; i++) {
         for(int8_t j = 0; j < 8; j++) {
