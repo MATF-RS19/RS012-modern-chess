@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui_->view->setParent(ui_->horizontalLayoutWidget);
     ui_->view->resize(1000, 850);
     ui_->verticalSpacer->changeSize(50, 50);
-    ui_->field_code_text;
 
     connect(ui_->pick_field, SIGNAL(clicked(bool)),
                 this, SLOT(on_pick_field_clicked(bool)));
@@ -38,12 +37,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(ui_->horizontalLayoutWidget);
 }
 
+// read from the input line and move the selected figure
 void MainWindow::on_next_turn_clicked(bool) {
     if(game.current_phase() == pick_field &&
        ui_->field_code_text->text() != "") {
         std::string text(ui_->field_code_text->text().toStdString());
         std::string letters("ABCDEFGH");
         std::string digits("12345678");
+        // is the input text legit generally
         if(text.size() != 2) {
             qDebug() << "Mora da ima tacno 2 karaktera";
         } else if(letters.find(text[0]) == std::string::npos) {
@@ -51,9 +52,11 @@ void MainWindow::on_next_turn_clicked(bool) {
         } else if(digits.find(text[1]) == std::string::npos) {
             qDebug() << "Mora da se zavrsava sa nekim od karaktera 12345678";
         } else {
-            qDebug() << ui_->field_code_text->text();
+            // "Manhattan" distance
             int h = text[0] - game.picked_figure()->get_hor();
             int v = text[1] - game.picked_figure()->get_ver();
+
+            // check is the input text a legit field
             bool legit_move = false;
             for(auto && field : game.picked_figure()->possible_fields()) {
                 if(text[0]-'A' == field.i() && text[1]-'1' == field.j()) {
@@ -61,63 +64,59 @@ void MainWindow::on_next_turn_clicked(bool) {
                          [game.picked_figure()->get_ver()-'1'].set_taken(false);
                     board[field.i()][field.j()].set_taken(true);
                     board[field.i()][field.j()].set_fig_col(game.picked_figure()->color());
-                    qDebug("%c, %c\n", field.i()+'A', field.j()+'1');
                     legit_move = true;
                 }
             }
             if(!legit_move) {
-                qDebug() << "Not a legit move";
+                qDebug() << "Nelegalan potez";
                 return;
             }
+
+            // check for collisions
             if(game.picked_figure()->color() == Black) {
                 int k = 0;
-                qDebug("white ~~~%d~~~\n", white_fig.size());
                 std::for_each(white_fig.begin(), white_fig.end(),
                               [&](Figure* fig) -> void {
                                 if(fig->pos_i() == text[0]-'A' && fig->pos_j() == text[1]-'1') {
                                     scene_->removeItem(fig);
                                     white_fig.erase(white_fig.begin()+k);
-                                    qDebug() << "Sta";
                                 }
                                 k++;
                               }
                 );
             } else if(game.picked_figure()->color() == White) {
                 int k = 0;
-                qDebug("black ~~~%d~~~\n", black_fig.size());
                 std::for_each(black_fig.begin(), black_fig.end(),
                               [&](Figure* fig) -> void {
-                                qDebug("!!! %c, %c !!!", fig->get_hor(), fig->get_ver());
                                 if(fig->pos_i() == text[0]-'A' && fig->pos_j() == text[1]-'1') {
                                     scene_->removeItem(fig);
                                     black_fig.erase(black_fig.begin()+k);
-                                    qDebug() << "Sta ali belo";
                                 }
                                 k++;
                               }
                 );
             }
-            game.picked_figure()->set_pos_i(text[0]-'A');
-            game.picked_figure()->set_pos_j(text[1]-'1');
+
+            // move the figure and end the turn
             game.picked_figure()->moveBy(v*50, h*50);
             game.picked_figure()->set_pos_i(text[0]-'A');
             game.picked_figure()->set_pos_j(text[1]-'1');
             game.end_turn();
+            ui_->field_code_text->clear();
         }
     } else {
         qDebug() << "Nisi uneo nikakav tekst ili nisi izabrao figuru";
     }
 }
 
-
 void MainWindow::on_pick_field_clicked(bool) {
     if(game.picked_figure() != nullptr) {
         game.set_current_phase(pick_field);
-        qDebug() << "Ok je, izabrao si figuru";
     } else {
         qDebug() << "Nisi izabrao figuru";
     }
 }
+
 
 void MainWindow::populateScene() {
     scene_ = new QGraphicsScene(0, 0, 800, 800);
@@ -162,8 +161,8 @@ void MainWindow::populateScene() {
                         break;
                     case 1: // knight
                     case 6:
-//                        white_fig.push_back(new Figure(Knight, i, j, White, rect));
-//                        board[i][j].set_taken(true);
+                        white_fig.push_back(new Figure(Knight, i, j, White, rect));
+                        board[i][j].set_taken(true);
                         break;
                     case 2: // bishop
                     case 5:
@@ -181,7 +180,6 @@ void MainWindow::populateScene() {
                 }
                 scene_->addItem(white_fig.back());
             } else if(i == 1) { // Pawn
-                if(j==7 || j == 4 || j == 3) continue;
                 white_fig.push_back(new Figure(Pawn, i, j, White, rect));
                 board[i][j].set_taken(true);
                 scene_->addItem(white_fig.back());
@@ -213,13 +211,28 @@ void MainWindow::populateScene() {
                 }
                 scene_->addItem(black_fig.back());
             } else if(i == 6) { // Pawn
-                if(j == 7) continue;
                 black_fig.push_back(new Figure(Pawn, i, j, Black, rect));
                 board[i][j].set_taken(true);
                 scene_->addItem(black_fig.back());
             }
         }
     }
+//    QRectF rect3(115+2*50, 100+2*50, 50, 50);
+//    QRectF rect4(115+3*50, 100+2*50, 50, 50);
+//    QRectF rect5(115+3*50, 100+3*50, 50, 50);
+//    QRectF rect6(115+5*50, 100+2*50, 50, 50);
+//    black_fig.push_back(new Figure(Rook, 2, 2, Black, rect3));
+//    scene_->addItem(black_fig.back());
+//    black_fig.push_back(new Figure(Rook, 2, 3, Black, rect4));
+//    scene_->addItem(black_fig.back());
+//    black_fig.push_back(new Figure(Rook, 3, 3, Black, rect5));
+//    scene_->addItem(black_fig.back());
+//    black_fig.push_back(new Figure(Rook, 2, 5, Black, rect6));
+//    scene_->addItem(black_fig.back());
+//    board[2][2].set_taken(true);
+//    board[2][3].set_taken(true);
+//    board[3][3].set_taken(true);
+//    board[2][5].set_taken(true);
 }
 
 MainWindow::~MainWindow()

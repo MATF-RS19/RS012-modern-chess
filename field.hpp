@@ -21,13 +21,6 @@ extern figure_color current_turn;
 
 class Field {
 public:
-//    Field(QGraphicsRectItem* rect_item = new QGraphicsRectItem(),
-//          bool taken = false,
-//          QColor color = Qt::black)
-//        : rect_item_(rect_item_)
-//        , taken_(taken)
-//        , color_(color) { }
-
     Field(int8_t i=0, int8_t j=0,
           bool taken = false,
           figure_color fig_col = White)
@@ -36,6 +29,10 @@ public:
         , taken_(taken)
         , fig_col_(fig_col) {
         rect_item_ = new QGraphicsRectItem();
+    }
+
+    bool operator == (const Field& other) const {
+        return  i_ == other.i_ && j_ == other.j_ && rect_item_ == other.rect_item_;
     }
 
     void set_i(int8_t i) {

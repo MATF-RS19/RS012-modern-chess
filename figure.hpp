@@ -5,6 +5,7 @@
 #include <QGraphicsItem>
 #include "field.hpp"
 
+extern Field board[8][8];
 class Figure : public QGraphicsItem {
 public:
     Figure(figure_type type,
@@ -68,6 +69,11 @@ public:
 
     void clear_fields() {
         possible_fields_.clear();
+        for(int8_t i = 0; i < 8; i++) {
+            for(int8_t j = 0; j < 8; j++) {
+                board[i][j].reset_color();
+            }
+        }
     }
 protected:
     void advance(int step) override;
@@ -75,6 +81,10 @@ protected:
 private:
     void calculate_possible_fields(int8_t i, int8_t j,
                                                  figure_type type, QColor color);
+    bool check_if_check();
+    void limit_king_movement();
+    void in_case_of_check();
+    bool is_checkmate();
     figure_type type_;
     int8_t pos_i_, pos_j_;
     figure_color color_;
