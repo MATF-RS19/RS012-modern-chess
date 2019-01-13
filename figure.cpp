@@ -256,6 +256,9 @@ void Figure::calculate_possible_fields(int8_t i, int8_t j,
             }
             break;
         }
+        // the king must simulate the opponents movements
+        // before he moves to a certain field we first must check
+        // will there be a check if he goes there
         case King: {
             if(i-1>=0 && (!board[i-1][j].is_taken() || board[i-1][j].is_enemy())) {
 
@@ -386,6 +389,7 @@ extern std::vector<Figure*> white_fig;
 extern std::vector<Figure*> black_fig;
 extern Game game;
 extern figure_color current_turn;
+// check has there been a check
 bool Figure::check_if_check() {
     if(color_ == White) {
         for(const auto &fig : black_fig) {
@@ -426,6 +430,7 @@ bool Figure::check_if_check() {
     return false;
 }
 
+// if check occured the kings movements have been constrained
 void Figure::limit_king_movement() {
     std::vector<Field> checked;
     if(color_ == White) {
@@ -475,6 +480,8 @@ void Figure::limit_king_movement() {
     }
 }
 
+// limit the movement of friendly figures if check occured
+// they must defend their king
 void Figure::in_case_of_check() {
     std::vector<Field> tmp_possible_fields;
     for(auto&& field : possible_fields_) {
@@ -537,6 +544,8 @@ void Figure::in_case_of_check() {
     }
 }
 
+// this function is called if check occured
+// it check has checkmate occured
 bool Figure::is_checkmate() {
     if(color_ == White) {
         for(auto&& fig : white_fig) {
@@ -601,5 +610,5 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
 }
 
 void Figure::advance(int step) {
-//    setPos(115+4*50, 115+4*50);
+
 }
