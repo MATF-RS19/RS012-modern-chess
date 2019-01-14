@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui_(new Ui::MainWindow)
 {
     ui_->setupUi(this);
+
     populateScene();
 
     ui_->view = new QGraphicsView();

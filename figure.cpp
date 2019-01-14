@@ -65,6 +65,10 @@ void Figure::calculate_possible_fields(int8_t i, int8_t j,
                         result.push_back(board[i-1][j-1]);
                     } if(j <= 6 && board[i-1][j+1].is_taken() && board[i-1][j+1].is_enemy()) {
                         result.push_back(board[i-1][j+1]);
+                    } if(i == 6) {
+                        if(!board[i-1][j].is_taken() && !board[i-2][j].is_taken()) {
+                            result.push_back(board[i-2][j]);
+                        }
                     }
                 }
             } else if(color == White) {
@@ -75,6 +79,10 @@ void Figure::calculate_possible_fields(int8_t i, int8_t j,
                         result.push_back(board[i+1][j-1]);
                     } if(j <= 6 && board[i+1][j+1].is_taken() && board[i+1][j+1].is_enemy()) {
                         result.push_back(board[i+1][j+1]);
+                    } if(i == 1) {
+                        if(!board[i+1][j].is_taken() && !board[i+2][j].is_taken()) {
+                            result.push_back(board[i+2][j]);
+                        }
                     }
                 }
             }
@@ -552,7 +560,6 @@ bool Figure::is_checkmate() {
             fig->calculate_possible_fields(fig->pos_i(), fig->pos_j(), fig->type_, fig->color());
             fig->in_case_of_check();
             if(fig->possible_fields_.size() != 0) {
-                qDebug("Nije sah mat zbog %c %c", fig->get_hor(), fig->get_ver());
                 return false;
             }
         }
@@ -583,14 +590,12 @@ void Figure::mousePressEvent(QGraphicsSceneMouseEvent * event) {
     }
     calculate_possible_fields(pos_i_, pos_j_, type_, color_);
     bool check = check_if_check();
-    if(check) {
-        qDebug() << "JESTE SAH";
-    }
 
     if(type_ == King) {
         limit_king_movement();
     }
     if(check) {
+        qDebug() << "Sah";
         in_case_of_check();
         bool checkmate = is_checkmate();
         if(checkmate) {
